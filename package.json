@@ -1,0 +1,70 @@
+{
+  "name": "dsh-image2-tool",
+  "version": "0.3.0",
+  "description": "DeepSeek Harness bundle that exposes an OpenAI-compatible image relay as the image2_generate tool, with inline media previews.",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "engines": { "node": ">=22.15" },
+  "files": ["index.js", "lib/client.js", "cordis.patch.yml", "README.md"],
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "cordis",
+    "bundle",
+    "plugin",
+    "text-to-image",
+    "image-generation",
+    "ai-image",
+    "image-relay",
+    "openai-compatible",
+    "inline-media",
+    "web-ui"
+  ],
+  "license": "MIT",
+  "author": "544244857",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/544244857/dsh-image2-plugin.git"
+  },
+  "homepage": "https://github.com/544244857/dsh-image2-plugin#readme",
+  "bugs": {
+    "url": "https://github.com/544244857/dsh-image2-plugin/issues"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": ["@deepseek-ai/dsh-client-ui-plugin-manager"]
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.4",
+    "@deepseek-ai/dsh-client-ui-plugin-manager": "^0.1.7-rc.1 || ^0.2.0-rc.1",
+    "@deepseek-ai/dsh-tools": ">=0.0.1-rc.1 <0.3.0",
+    "@deepseek-ai/schemastery": "^3.18.4",
+    "react": "^18.2.0"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/cordis": { "optional": true },
+    "@deepseek-ai/dsh-client-ui-plugin-manager": { "optional": true },
+    "@deepseek-ai/dsh-tools": { "optional": true },
+    "@deepseek-ai/schemastery": { "optional": true },
+    "react": { "optional": true }
+  },
+  "dependencies": {
+    "@wisdoverse/dsh-inline-media-viewer": "1.0.12"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "^4.0.4",
+    "@deepseek-ai/schemastery": "^3.18.4",
+    "@deepseek-ai/dsh-tools": ">=0.0.1-rc.1 <0.3.0"
+  }
+}

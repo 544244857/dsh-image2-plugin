@@ -1,0 +1,10 @@
+- insert:
+    - id: image2
+      name: dsh-image2-tool
+      config:
+        baseUrl: https://your-image-relay.example.com/v1
+        model: gpt-image-1
+        apiKeyEnv: IMAGE2_API_KEY
+        autoGenerateAssets: false
+        outputDir: imagegen-output
+        timeoutMs: 180000

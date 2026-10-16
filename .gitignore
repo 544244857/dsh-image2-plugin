@@ -1,0 +1,8 @@
+*.env
+!*.env.example
+node_modules/
+imagegen-output/
+release/
+*.tmp
+.DS_Store
+Thumbs.db

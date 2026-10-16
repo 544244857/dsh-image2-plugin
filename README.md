@@ -28,6 +28,20 @@
 | 内联预览 | 自动带上 [@wisdoverse/dsh-inline-media-viewer](https://github.com/Wisdoverse/dsh-inline-media-viewer-plugin)，图片直接渲染在回复下方，无需点开卡片 |
 | 克制默认 | `autoGenerateAssets` 默认 `false`，普通开发任务不会悄悄花掉生图额度；输出被限制在会话目录内 |
 
+## 使用示例
+
+下面两张图来自一次真实会话：让 Agent「生成一张 GPT 化龙指导器的形象」，它自己挑参考图、比对版本、迭代出成品。
+
+**对话里长这样** —— 生成过程、参考图、版本对比都在回复里，图片由内联预览直接渲染，不用点开任何卡片（长图，可点开看全）：
+
+<img src="https://raw.githubusercontent.com/544244857/dsh-image2-plugin/main/docs/images/example-usage.png" width="420" alt="在 DSH 对话中使用 dsh-image2-tool 的完整会话截图">
+
+**最终结果** —— 该会话产出的成品（864 × 1152）：
+
+<img src="https://raw.githubusercontent.com/544244857/dsh-image2-plugin/main/docs/images/example-result.jpg" width="360" alt="生成的成品图">
+
+> 复现方式：装好插件后直接对 Agent 说「生成一张 XXX 的图」即可。`autoGenerateAssets` 保持默认 `false` 时，只有你明确要求才会生图。
+
 ## 安装
 
 ### 官方通用方式（推荐）

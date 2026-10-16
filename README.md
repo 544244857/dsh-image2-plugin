@@ -13,7 +13,7 @@
 
 给 **DeepSeek Harness** 加上「一句话生成图片」的能力：接你自己的 OpenAI 兼容图片中转站，生成的图**直接内联显示在对话里**。
 
-![dsh-image2-tool 横幅](docs/images/banner.jpg)
+![dsh-image2-tool 横幅](https://raw.githubusercontent.com/544244857/dsh-image2-plugin/main/docs/images/banner.jpg)
 
 ---
 

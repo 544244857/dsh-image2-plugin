@@ -2,6 +2,22 @@
 
 本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## 0.4.0 — 2026-10-17
+
+### 新增
+
+- **图生图（参考图引导生成）**：`image2_generate` 新增 `image` 参数，传本地参考图路径即改走 `POST /images/edits`（`multipart/form-data` 上传），不传仍是文生图 `POST /images/generations`。
+- 新增 `aspectRatio` 参数（以 `aspect_ratio` 字段发出），给只认宽高比、忽略 `size` 的中转站用。
+- 新增 `responseFormat` 配置项（默认 `b64_json`）：设 `url` 让插件下载中转站返回的链接，设为空字符串则完全不发该字段。
+- 参考图在发出请求前完成校验：按魔术字节判定 PNG/JPEG/WebP，限制 20 MB；路径不存在、非普通文件、格式不支持均提前报错，不消耗额度。
+
+### 修复
+
+- 中转站返回自家 CDN 临时链接且本机连不上该域名时（`ConnectTimeoutError: attempted address: imgen.x.ai:443`），可用 `responseFormat: b64_json` 让图片字节内联回传。
+
+### 测试
+
+- `test/smoke.js` 扩到 13 项，新增 multipart 上传、魔术字节校验、`responseFormat` 两条通道三个用例；测试断言从 `images/generations` 放宽到按模式匹配端点。
 ## 0.3.0 — 2026-10-16
 
 ### 新增

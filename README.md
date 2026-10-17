@@ -9,9 +9,9 @@
 ![DeepSeek Harness](https://img.shields.io/badge/DeepSeek%20Harness-0.2.0--rc.2-4B5563)
 ![Plugin](https://img.shields.io/badge/dsh-plugin-8B5CF6)
 
-**社区插件标签**：`dsh-plugin` · `deepseek-harness` · `cordis` · `bundle` · `text-to-image` · `image-generation` · `ai-image` · `image-relay` · `openai-compatible` · `inline-media` · `web-ui` · `tool`
+**社区插件标签**：`dsh-plugin` · `deepseek-harness` · `cordis` · `bundle` · `text-to-image` · `image-to-image` · `image-generation` · `ai-image` · `image-relay` · `openai-compatible` · `inline-media` · `web-ui` · `tool`
 
-给 **DeepSeek Harness** 加上「一句话生成图片」的能力：接你自己的 OpenAI 兼容图片中转站，生成的图**直接内联显示在对话里**。
+给 **DeepSeek Harness** 加上「一句话生成图片」和「拿参考图改图」的能力：接你自己的 OpenAI 兼容图片中转站，生成的图**直接内联显示在对话里**。
 
 ![dsh-image2-tool 横幅](https://raw.githubusercontent.com/544244857/dsh-image2-plugin/main/docs/images/banner.jpg)
 
@@ -22,7 +22,8 @@
 | 能力 | 说明 |
 | --- | --- |
 | 一行安装 | 官方通用方式 `dsh plugin --profile <profile> add dsh-image2-tool`，重启后工具表出现 `image2_generate` |
-| 自己的中转站 | 通过 `POST /images/generations` 调用你的 OpenAI 兼容图片服务，同时支持 `b64_json` 与图片 URL 两种返回 |
+| 自己的中转站 | 文生图走 `POST /images/generations`，图生图走 `POST /images/edits`，同时支持 `b64_json` 与图片 URL 两种返回 |
+| 参考图引导 | 给 `image` 传一张本地 PNG/JPEG/WebP，角色一致性、画风与配色远比纯文字描述稳 |
 | 图形化配置 | 侧边栏 Plugins 页内置设置行（含遮蔽的 `apiKey` 字段），也可直接写 `cordis.patch.yml` |
 | 视觉自检 | 生成后用原生 `read_image` 复核真实文件，不把「接口成功」当成「视觉合格」 |
 | 内联预览 | 自动带上 [@wisdoverse/dsh-inline-media-viewer](https://github.com/Wisdoverse/dsh-inline-media-viewer-plugin)，图片直接渲染在回复下方，无需点开卡片 |
@@ -42,6 +43,33 @@
 
 > 复现方式：装好插件后直接对 Agent 说「生成一张 XXX 的图」即可。`autoGenerateAssets` 保持默认 `false` 时，只有你明确要求才会生图。
 
+## 参考图引导（图生图）
+
+只要调用里带上 `image`，插件就改走 `POST /images/edits`：
+
+```jsonc
+{
+  "prompt": "保持这个角色设定，改成少女比例，正常七头身，不要 Q 版",
+  "image": "imagegen-output/reference.jpg",   // 相对会话目录或绝对路径
+  "aspectRatio": "3:4",
+  "filename": "result.jpg"
+}
+```
+
+| 参数 | 说明 |
+| --- | --- |
+| `prompt` | 必填。要生成或要改什么 |
+| `image` | 可选。本地参考图路径（PNG/JPEG/WebP，≤ 20 MB）。给了就走图生图，不给就是文生图 |
+| `filename` | 可选。输出文件名，不含目录 |
+| `size` | 可选。形如 `1024x1024`。只认 `aspect_ratio` 的中转站会忽略它 |
+| `aspectRatio` | 可选。形如 `3:4`、`16:9`，以 `aspect_ratio` 字段发出。中转站忽略 `size` 时用它控制构图 |
+
+细节：
+
+- 参考图按**魔术字节**判定真实类型，不信任扩展名；文件不存在、不是普通文件、超过 20 MB、或不是受支持的图片格式，都在**发出请求之前**就报错，不浪费额度。
+- 上传用 `multipart/form-data`，`Content-Type` 与 boundary 交给 `FormData` 处理。
+- 中转站若不接受 `response_format`，把 `responseFormat` 设为空字符串即可不发该字段。
+
 ## 安装
 
 ### 官方通用方式（推荐）
@@ -56,7 +84,7 @@ dsh plugin --profile <profile> add dsh-image2-tool
 
 ```powershell
 # 从 GitHub Release 下载的 tgz
-dsh plugin --profile <profile> add ./dsh-image2-tool-0.3.0.tgz
+dsh plugin --profile <profile> add ./dsh-image2-tool-0.4.0.tgz
 
 # 直接从 GitHub 仓库安装
 dsh plugin --profile <profile> add github:544244857/dsh-image2-plugin
@@ -89,6 +117,7 @@ dsh --profile image2-demo --from-default-profile web --dump-config
     autoGenerateAssets: false
     outputDir: imagegen-output
     timeoutMs: 180000
+    responseFormat: b64_json
 ```
 
 | 字段 | 说明 |
@@ -100,6 +129,7 @@ dsh --profile image2-demo --from-default-profile web --dump-config
 | `autoGenerateAssets` | 是否允许在软件开发任务中自动补齐缺失位图素材，默认 `false` |
 | `outputDir` | 输出目录，相对会话目录解析并强制不越界 |
 | `timeoutMs` | 单次请求超时 |
+| `responseFormat` | 向中转站索要的返回格式，默认 `b64_json`（图片字节内联回传）。设 `url` 则让插件去下载中转站给的链接；设为**空字符串**则完全不发这个字段，给不接受它的中转站用 |
 
 API key 交给**启动 DSH 的那个进程**：
 
@@ -119,7 +149,7 @@ dsh --profile web
 ## 行为与边界
 
 - `autoGenerateAssets` 默认关闭。打开后，Agent 可以在网页、移动端、桌面端、游戏等软件开发过程中，确认项目内与外部都没有合适素材后，生成真正缺失的位图素材；用户的直接生图请求不受该开关影响。它是**工具层指引**，不是服务端授权闸门。
-- 只走 `POST /images/generations`，一次一张；仅支持文本提示词，不支持上传参考图/蒙版，也不能直接编辑已有图片。
+- 一次一张。不带 `image` 走 `POST /images/generations`（文生图），带 `image` 走 `POST /images/edits`（图生图，multipart 上传参考图）。
 - 接受 base64 与图片 URL 两种结果；保留同名已有文件（冲突自动加序号），输出限定在会话目录内，支持取消与请求超时。
 - 下载图片时**不会**转发中转站 key。
 - 保存后必须用原生 `read_image` 检查实际文件并与需求逐项对照；在检查完成前，工具会把「视觉验收」标记为待办。
@@ -132,6 +162,9 @@ dsh --profile web
 | --- | --- |
 | `HTTP 404: Model "xxx" is not available for this group` | 模型名在该中转站上不存在。用 `GET /v1/models` 查可用列表后改 `model` 字段（volatile 字段保存即生效，无需重启） |
 | `Error: fetch failed` | 到中转站的网络抖动，重试即可（与 404 是完全不同的故障） |
+| `Image download failed` 或下载时 `ConnectTimeoutError` | 中转站返回的是它自己 CDN 的临时链接，而这台机器连不上那个域名。把 `responseFormat` 设为 `b64_json`，让图片字节直接内联回传 |
+| 图生图报 `Source image not found` / `contained no supported PNG, JPEG or WebP image bytes` | 参考图路径不对，或文件其实不是图片（按魔术字节判定，改扩展名没用） |
+| 图生图报 `HTTP 400: model is required` | 该中转站没有 `/images/edits` 路由。文生图仍可用，图生图需换支持的中转站 |
 | 工具表里没有 `image2_generate` | profile 未安装成功或未重启；确认 profile 的 `package.json` 中 `dsh.profile.bundles` 含 `dsh-image2-tool` |
 | 设置页显示 `unavailable` | 该 profile 没有 settings 服务，改用上面的 `cordis.patch.yml` 手工行 |
 | 图片没内联显示 | 确认 `@wisdoverse/dsh-inline-media-viewer` 也在 `dsh.profile.bundles` 中，并重启 DSH |
@@ -139,16 +172,17 @@ dsh --profile web
 ## 兼容性
 
 - 宿主：DeepSeek Harness 桌面版 `0.2.0-rc.2`（实测），`0.1.7-rc.2` 亦声明兼容
-- Node.js `>= 22.15`
+- Node.js `>= 22.15`（图生图依赖全局 `FormData` / `Blob`）
 - 插件通过 `peerDependencies` 共享宿主的 Cordis / Schemastery / tool runtime；不要在插件目录里放不兼容的物理副本（会出现两份实例）
 
 ## 工作方式
 
 ```mermaid
 flowchart LR
-  U[用户: 生成一张图] --> A[Agent]
+  U[用户: 生成 / 改一张图] --> A[Agent]
   A -->|image2_generate| T[dsh-image2-tool]
-  T -->|POST /images/generations| R[你的图片中转站]
+  T -->|无 image: POST /images/generations| R[你的图片中转站]
+  T -->|有 image: POST /images/edits| R
   R -->|b64_json 或 url| T
   T --> F[会话目录 / outputDir]
   F --> V[read_image 视觉自检]
@@ -158,6 +192,7 @@ flowchart LR
 - 工具面：`image2_generate`（宿主工具注册表）
 - 客户端面：`lib/client.js` 向 Plugins 页注入 `image2` 配置行
 - bundle 面：`cordis.patch.yml` 插入插件行 `id: image2`
+- 测试：`test/smoke.js` 用本地假中转站覆盖两条通道，不需要网络与额度
 
 ## 许可
 
@@ -165,4 +200,4 @@ MIT © 2026 544244857。依赖 [@wisdoverse/dsh-inline-media-viewer](https://git
 
 ---
 
-<sub>English: `dsh-image2-tool` is a DeepSeek Harness plugin bundle that turns your own OpenAI-compatible image relay into the `image2_generate` tool, and renders generated images inline in the conversation. Install with `dsh plugin --profile <profile> add dsh-image2-tool`.</sub>
+<sub>English: `dsh-image2-tool` is a DeepSeek Harness plugin bundle that turns your own OpenAI-compatible image relay into the `image2_generate` tool for text-to-image and image-to-image, and renders generated images inline in the conversation. Install with `dsh plugin --profile <profile> add dsh-image2-tool`.</sub>

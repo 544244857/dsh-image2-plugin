@@ -1,7 +1,7 @@
 {
   "name": "dsh-image2-tool",
-  "version": "0.3.0",
-  "description": "DeepSeek Harness bundle that exposes an OpenAI-compatible image relay as the image2_generate tool, with inline media previews.",
+  "version": "0.4.0",
+  "description": "DeepSeek Harness bundle that exposes an OpenAI-compatible image relay as the image2_generate tool for text-to-image and image-to-image, with inline media previews.",
   "type": "module",
   "main": "index.js",
   "exports": {
@@ -19,6 +19,8 @@
     "bundle",
     "plugin",
     "text-to-image",
+    "image-to-image",
+    "image-editing",
     "image-generation",
     "ai-image",
     "image-relay",

@@ -8,3 +8,4 @@
         autoGenerateAssets: false
         outputDir: imagegen-output
         timeoutMs: 180000
+        responseFormat: b64_json

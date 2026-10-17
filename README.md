@@ -6,8 +6,10 @@
 ![License](https://img.shields.io/github/license/544244857/dsh-image2-plugin)
 ![Node](https://img.shields.io/badge/node-%3E%3D22.15-339933?logo=node.js&logoColor=white)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-0078D4)
-![DeepSeek Harness](https://img.shields.io/badge/DeepSeek%20Harness-0.2.0--rc.2-4B5563)
+![DeepSeek Harness](https://img.shields.io/badge/DeepSeek%20Harness-0.2.1-4B5563)
 ![Plugin](https://img.shields.io/badge/dsh-plugin-8B5CF6)
+
+**Language**: [中文](README.md) · English
 
 **社区插件标签**：`dsh-plugin` · `deepseek-harness` · `cordis` · `bundle` · `text-to-image` · `image-to-image` · `image-generation` · `ai-image` · `image-relay` · `openai-compatible` · `inline-media` · `web-ui` · `tool`
 
@@ -84,7 +86,7 @@ dsh plugin --profile <profile> add dsh-image2-tool
 
 ```powershell
 # 从 GitHub Release 下载的 tgz
-dsh plugin --profile <profile> add ./dsh-image2-tool-0.4.0.tgz
+dsh plugin --profile <profile> add ./dsh-image2-tool-0.4.1.tgz
 
 # 直接从 GitHub 仓库安装
 dsh plugin --profile <profile> add github:544244857/dsh-image2-plugin
@@ -144,7 +146,7 @@ dsh --profile web
 
 安装本插件时会一并安装 [`@wisdoverse/dsh-inline-media-viewer`](https://github.com/Wisdoverse/dsh-inline-media-viewer-plugin) `1.0.12`。该包自带 `dsh.bundle` patch，安装时会被 profile 管理器自动启用为 bundle，于是回复中提到的图片路径会直接在对话里渲染成图片。
 
-它由上游维护、MIT 许可，本插件既不 vendor 也不修改其代码；删除 `dependencies` 里的这一行，image2 功能完全不受影响，只是内联预览消失。上游标注内联图片卡片在宿主 `0.1.7-rc.2` 上验证过，本插件面向 `0.2.0-rc.2`，所用宿主 API 均存在，但渲染路径上游尚未复测。
+它由上游维护、MIT 许可，本插件既不 vendor 也不修改其代码；删除 `dependencies` 里的这一行，image2 功能完全不受影响，只是内联预览消失。上游标注内联图片卡片在宿主 `0.1.7-rc.2` 上验证过，本插件面向 `0.2.1-rc.1`，所用宿主 API 均存在，但渲染路径上游尚未复测。
 
 ## 行为与边界
 
@@ -171,7 +173,7 @@ dsh --profile web
 
 ## 兼容性
 
-- 宿主：DeepSeek Harness 桌面版 `0.2.0-rc.2`（实测），`0.1.7-rc.2` 亦声明兼容
+- 宿主：DeepSeek Harness 桌面版 `0.2.1-rc.1`（实测），`0.2.0-rc.2` 与 `0.1.7-rc.2` 亦声明兼容
 - Node.js `>= 22.15`（图生图依赖全局 `FormData` / `Blob`）
 - 插件通过 `peerDependencies` 共享宿主的 Cordis / Schemastery / tool runtime；不要在插件目录里放不兼容的物理副本（会出现两份实例）
 
@@ -200,4 +202,4 @@ MIT © 2026 544244857。依赖 [@wisdoverse/dsh-inline-media-viewer](https://git
 
 ---
 
-<sub>English: `dsh-image2-tool` is a DeepSeek Harness plugin bundle that turns your own OpenAI-compatible image relay into the `image2_generate` tool for text-to-image and image-to-image, and renders generated images inline in the conversation. Install with `dsh plugin --profile <profile> add dsh-image2-tool`.</sub>
+<sub>English documentation: [README.en.md](README.en.md).</sub>

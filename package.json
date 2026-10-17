@@ -1,6 +1,6 @@
 {
   "name": "dsh-image2-tool",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "DeepSeek Harness bundle that exposes an OpenAI-compatible image relay as the image2_generate tool for text-to-image and image-to-image, with inline media previews.",
   "type": "module",
   "main": "index.js",
@@ -10,7 +10,7 @@
     "./package.json": "./package.json"
   },
   "engines": { "node": ">=22.15" },
-  "files": ["index.js", "lib/client.js", "cordis.patch.yml", "README.md"],
+  "files": ["index.js", "lib/client.js", "cordis.patch.yml", "README.md", "README.en.md"],
   "keywords": [
     "dsh",
     "dsh-plugin",
@@ -49,8 +49,8 @@
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "^4.0.4",
-    "@deepseek-ai/dsh-client-ui-plugin-manager": "^0.1.7-rc.1 || ^0.2.0-rc.1",
-    "@deepseek-ai/dsh-tools": ">=0.0.1-rc.1 <0.3.0",
+    "@deepseek-ai/dsh-client-ui-plugin-manager": "^0.1.7-rc.1 || ^0.2.0-rc.1 || ^0.2.1-rc.1",
+    "@deepseek-ai/dsh-tools": ">=0.0.1-rc.1 <0.3.0 || ^0.2.1-rc.1",
     "@deepseek-ai/schemastery": "^3.18.4",
     "react": "^18.2.0"
   },

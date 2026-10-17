@@ -2,6 +2,17 @@
 
 本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## 0.4.1 — 2026-10-17
+
+### 变更
+
+- **适配 DeepSeek Harness `0.2.1`**：`peerDependencies` 中 `@deepseek-ai/dsh-client-ui-plugin-manager` 追加 `^0.2.1-rc.1`，`@deepseek-ai/dsh-tools` 追加 `^0.2.1-rc.1`。此前宿主升级到 `0.2.1-rc.1` 后，插件的 peer 范围不覆盖该版本，会被 DSH 的插件兼容性门禁整体跳过，`image2_generate` 不会注册。
+- 新增英文说明文档 [README.en.md](README.en.md)，README 顶部加语言切换链接。
+
+### 说明
+
+- 插件代码未改动，仅版本与 peer 范围调整；`0.2.0-rc.2` 及更早版本仍然兼容。
+
 ## 0.4.0 — 2026-10-17
 
 ### 新增
